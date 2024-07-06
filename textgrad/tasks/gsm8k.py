@@ -1,6 +1,7 @@
 import platformdirs
 
 from .base import Dataset
+import secrets
 
 class GSM8K(Dataset):
     def __init__(self, subset:str, root: str=None, split: str="train", *args, **kwargs):
@@ -43,7 +44,6 @@ class GSM8K_DSPy(GSM8K):
     def __init__(self, root:str=None, split: str="train"):
         """DSPy splits for the GSM8K dataset."""
         import tqdm
-        import random
         from datasets import load_dataset
         if root is None:
             root = platformdirs.user_cache_dir("textgrad")
@@ -71,9 +71,9 @@ class GSM8K_DSPy(GSM8K):
             answer = str(int(answer[-1].replace(',', '')))
             official_test.append(dict(question=question, gold_reasoning=gold_reasoning, answer=answer))
 
-        rng = random.Random(0)
+        rng = secrets.SystemRandom().Random(0)
         rng.shuffle(official_train)
-        rng = random.Random(0)
+        rng = secrets.SystemRandom().Random(0)
         rng.shuffle(official_test)
         trainset = official_train[:200]
         devset = official_train[200:500]

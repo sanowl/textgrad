@@ -1,10 +1,10 @@
 import re
 import platformdirs
-import random
 from textgrad.variable import Variable
 from textgrad.loss import MultiFieldTokenParsedEvaluation
 from .base import Dataset
 from textgrad.loss import MultiChoiceTestTime
+import secrets
 
 # Below template is from https://github.com/openai/simple-evals/blob/main/common.py#L12
 QUERY_TEMPLATE_MULTICHOICE = """
@@ -45,8 +45,8 @@ class GPQA(Dataset):
         
         choices = [row['Incorrect Answer 1'], row['Incorrect Answer 2'], row['Incorrect Answer 3'], row['Correct Answer']]
         choices = [choice.strip() for choice in choices]
-        random.seed(42)
-        random.shuffle(choices)
+        secrets.SystemRandom().seed(42)
+        secrets.SystemRandom().shuffle(choices)
         choices_dict = dict(
                 A=choices[0], B=choices[1], C=choices[2], D=choices[3], Question=row["Question"]
             ) 
@@ -117,8 +117,8 @@ class GPQAInstanceDataset(GPQA):
         
         choices = [row['Incorrect Answer 1'], row['Incorrect Answer 2'], row['Incorrect Answer 3'], row['Correct Answer']]
         choices = [choice.strip() for choice in choices]
-        random.seed(42)
-        random.shuffle(choices)
+        secrets.SystemRandom().seed(42)
+        secrets.SystemRandom().shuffle(choices)
         choices_dict = dict(
                 A=choices[0], B=choices[1], C=choices[2], D=choices[3], Question=row["Question"]
             ) 
@@ -150,7 +150,7 @@ class GPQAInstanceDatasetOpenAI(Dataset):
         self.subset = subset
         df = pd.read_csv(f"https://openaipublic.blob.core.windows.net/simple-evals/gpqa_{subset[5:]}.csv")
         examples = [row.to_dict() for _, row in df.iterrows()]
-        rng = random.Random(0)
+        rng = secrets.SystemRandom().Random(0)
         self.data = [example | {"permutation": rng.sample(range(4), 4)} for example in examples]
         self._task_description = 'GPQA task' # Need to update
         self.evaluation_api = evaluation_api
