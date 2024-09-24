@@ -28,7 +28,7 @@ class LeetCodeHardEval(Dataset):
         os.makedirs(f"{self.root}/", exist_ok=True)
         import requests
         url = "https://raw.githubusercontent.com/vinid/data/master/leetcode_with_tests.jsonl"
-        r = requests.get(url)
+        r = requests.get(url, timeout=60)
         with open(data_path, 'wb') as f:
             f.write(r.content)
 
