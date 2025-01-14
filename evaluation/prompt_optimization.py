@@ -1,6 +1,8 @@
 import argparse
 import concurrent
 from dotenv import load_dotenv
+import secrets
+
 load_dotenv(override=True)
 
 from tqdm import tqdm
@@ -8,11 +10,10 @@ import textgrad as tg
 from textgrad.tasks import load_task
 
 import numpy as np
-import random
 
 def set_seed(seed):
     np.random.seed(seed)
-    random.seed(seed)
+    secrets.SystemRandom().seed(seed)
 
 def config():
     parser = argparse.ArgumentParser(description="Optimize a prompt for a task.")
